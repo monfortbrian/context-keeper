@@ -3,15 +3,16 @@
   "name": "Context Keeper",
   "version": "1.0.0",
   "description": "Save and restore your browsing contexts with one click. Never lose your workspace again.",
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "sidePanel"],
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  },
   "action": {
-    "default_popup": "index.html",
-    "default_title": "Context Keeper",
-    "default_icon": {
-      "16": "icon-16.png",
-      "48": "icon-48.png",
-      "128": "icon-128.png"
-    }
+    "default_title": "Context Keeper"
+  },
+  "side_panel": {
+    "default_path": "index.html"
   },
   "icons": {
     "16": "icon-16.png",

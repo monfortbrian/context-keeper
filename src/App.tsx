@@ -24,6 +24,7 @@ import {
   Globe,
   Calendar,
   Layers,
+  X,
 } from 'lucide-react';
 
 function App() {
@@ -102,92 +103,104 @@ function App() {
   };
 
   return (
-    <div className="w-[420px] h-[600px] bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 shadow-lg">
-        <div className="flex items-center gap-3 mb-2">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+      {/* Header - Fixed */}
+      <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-600 to-indigo-600 p-6 shadow-lg">
+        <div className="flex items-center gap-3">
           <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
             <Layers className="h-6 w-6 text-white" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white">Context Keeper</h1>
+          <div className="flex-1">
+            <h1 className="text-xl font-bold text-white">Context Keeper</h1>
             <p className="text-sm text-blue-100">Your workspace time machine</p>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-6 space-y-6">
         {/* Save Section */}
         {!showSaveDialog ? (
           <Button
             onClick={() => setShowSaveDialog(true)}
             disabled={isLoading}
-            className="w-full h-12 text-base font-medium shadow-md hover:shadow-lg transition-all"
+            className="w-full h-14 text-base font-medium shadow-md hover:shadow-lg transition-all"
             size="lg"
           >
             <Save className="mr-2 h-5 w-5" />
             Save Current Context
           </Button>
         ) : (
-          <Card className="mb-4 border-blue-200 shadow-md">
-            <CardContent className="pt-4 space-y-3">
+          <Card className="border-blue-200 shadow-md">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">Save Context</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setShowSaveDialog(false);
+                    setContextName('');
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <CardDescription>
+                Give your current workspace a memorable name
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
               <Input
                 placeholder="e.g., Client Project Work"
                 value={contextName}
                 onChange={(e) => setContextName(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSave()}
-                className="text-base"
+                className="text-base h-12"
                 autoFocus
               />
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleSave}
-                  disabled={isLoading}
-                  className="flex-1"
-                >
-                  <Save className="mr-2 h-4 w-4" />
-                  Save
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowSaveDialog(false);
-                    setContextName('');
-                  }}
-                  disabled={isLoading}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-              </div>
+              <Button
+                onClick={handleSave}
+                disabled={isLoading}
+                className="w-full h-12"
+                size="lg"
+              >
+                <Save className="mr-2 h-5 w-5" />
+                Save Context
+              </Button>
             </CardContent>
           </Card>
         )}
 
-        {/* Stats Bar */}
-        <div className="flex items-center justify-between py-3 px-1">
+        {/* Stats */}
+        <div className="flex items-center justify-between px-1">
           <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
             {contexts.length} saved{' '}
             {contexts.length === 1 ? 'context' : 'contexts'}
           </span>
+          {contexts.length > 0 && (
+            <span className="text-xs text-slate-400">
+              Latest: {formatDate(contexts[0].timestamp)}
+            </span>
+          )}
         </div>
 
         {/* Contexts List */}
-        <ScrollArea className="h-[400px] pr-4">
-          <div className="space-y-3">
+        <ScrollArea className="h-[calc(100vh-320px)]">
+          <div className="space-y-4 pr-4">
             {contexts.length === 0 ? (
               <Card className="border-dashed">
-                <CardContent className="pt-12 pb-12">
+                <CardContent className="pt-16 pb-16">
                   <div className="text-center">
-                    <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                      <Layers className="h-8 w-8 text-slate-400" />
+                    <div className="mx-auto w-20 h-20 mb-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                      <Layers className="h-10 w-10 text-slate-400" />
                     </div>
-                    <h3 className="font-medium text-slate-900 dark:text-slate-100 mb-1">
+                    <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">
                       No saved contexts yet
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Save your first workspace to get started
+                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                      Save your first workspace to quickly restore your tabs
+                      later
                     </p>
                   </div>
                 </CardContent>
@@ -196,51 +209,51 @@ function App() {
               contexts.map((context) => (
                 <Card
                   key={context.id}
-                  className="hover:shadow-md transition-shadow border-slate-200 dark:border-slate-800"
+                  className="hover:shadow-lg transition-all border-slate-200 dark:border-slate-800"
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
+                  <CardHeader>
+                    <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base truncate">
+                        <CardTitle className="text-lg mb-2 break-words">
                           {context.name}
                         </CardTitle>
-                        <CardDescription className="flex items-center gap-2 mt-1">
-                          <Calendar className="h-3 w-3" />
-                          <span>{formatDate(context.timestamp)}</span>
-                        </CardDescription>
+                        <div className="flex items-center gap-3 text-sm text-slate-500">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3.5 w-3.5" />
+                            <span>{formatDate(context.timestamp)}</span>
+                          </div>
+                          <Badge variant="secondary" className="gap-1">
+                            <Globe className="h-3 w-3" />
+                            {context.tabs.length}{' '}
+                            {context.tabs.length === 1 ? 'tab' : 'tabs'}
+                          </Badge>
+                        </div>
                       </div>
-                      <Badge variant="secondary" className="ml-2 shrink-0">
-                        <Globe className="h-3 w-3 mr-1" />
-                        {context.tabs.length}
-                      </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className="space-y-4">
                     {/* Tab Preview */}
-                    <div className="mb-3 space-y-1 text-xs text-slate-600 dark:text-slate-400">
-                      {context.tabs.slice(0, 2).map((tab, idx) => (
-                        <p
-                          key={idx}
-                          className="truncate flex items-center gap-1"
-                        >
-                          <span className="text-slate-400">•</span>
-                          {tab.title}
-                        </p>
+                    <div className="space-y-1.5 text-sm text-slate-600 dark:text-slate-400">
+                      {context.tabs.slice(0, 3).map((tab, idx) => (
+                        <div key={idx} className="flex items-start gap-2">
+                          <span className="text-slate-400 mt-0.5">•</span>
+                          <p className="flex-1 truncate">{tab.title}</p>
+                        </div>
                       ))}
-                      {context.tabs.length > 2 && (
-                        <p className="text-slate-400">
-                          +{context.tabs.length - 2} more tabs
+                      {context.tabs.length > 3 && (
+                        <p className="text-slate-400 pl-4">
+                          +{context.tabs.length - 3} more{' '}
+                          {context.tabs.length - 3 === 1 ? 'tab' : 'tabs'}
                         </p>
                       )}
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 pt-2">
                       <Button
                         onClick={() => handleRestore(context)}
                         disabled={isLoading}
-                        className="flex-1"
-                        size="sm"
+                        className="flex-1 h-11"
                       >
                         <FolderOpen className="mr-2 h-4 w-4" />
                         Restore
@@ -249,7 +262,8 @@ function App() {
                         onClick={() => handleDelete(context.id)}
                         disabled={isLoading}
                         variant="destructive"
-                        size="sm"
+                        size="icon"
+                        className="h-11 w-11"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
