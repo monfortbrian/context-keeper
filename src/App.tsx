@@ -27,7 +27,9 @@ function App() {
         const result = await chrome.storage.local.get(['userProfile', 'hasSeenWelcome']);
         
         if (result.hasSeenWelcome && result.userProfile) {
-          setUserProfile(result.userProfile);
+          // Type assertion to ensure correct type
+          const profile = result.userProfile as UserProfile;
+          setUserProfile(profile);
           setView('main');
         } else {
           setView('welcome');
@@ -62,7 +64,9 @@ function App() {
     job?: string;
   }) => {
     const profile: UserProfile = {
-      ...data,
+      nickname: data.nickname,
+      email: data.email,
+      job: data.job,
       createdAt: Date.now(),
       hasCompletedOnboarding: true,
     };
@@ -157,15 +161,29 @@ function App() {
         style={{
           height: '100vh',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           fontFamily: 'Inter, sans-serif',
+          gap: '16px',
         }}
       >
-        <div>
-          <p>Tab Selector (Coming next)</p>
-          <button onClick={() => setView('main')}>Back to Main</button>
-        </div>
+        <p style={{ fontSize: '16px', color: '#18181b' }}>Tab Selector (Coming next)</p>
+        <button
+          onClick={() => setView('main')}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#18181b',
+            color: '#efeded',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '14px',
+          }}
+        >
+          Back to Main
+        </button>
       </div>
     );
   }
