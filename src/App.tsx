@@ -4,7 +4,7 @@ import { UserInfoScreen } from './components/UserInfoScreen';
 import { AboutScreen } from './components/AboutScreen';
 import { MainScreen } from './components/MainScreen';
 
-type View = 'welcome' | 'user-info' | 'about' | 'main' | 'tab-selector';
+type View = 'welcome' | 'user-info' | 'about' | 'main';
 
 interface UserProfile {
   nickname: string;
@@ -24,14 +24,18 @@ function App() {
   useEffect(() => {
     const checkOnboarding = async () => {
       try {
-        const result = await chrome.storage.local.get(['userProfile', 'hasSeenWelcome']);
-        
-        if (result.hasSeenWelcome && result.userProfile) {
-          // Type assertion to ensure correct type
+        const result = await chrome.storage.local.get([
+          'userProfile',
+          'hasSeenWelcome',
+        ]);
+
+        // ONLY go to main if BOTH exist
+        if (result.hasSeenWelcome === true && result.userProfile) {
           const profile = result.userProfile as UserProfile;
           setUserProfile(profile);
           setView('main');
         } else {
+          // Start fresh - show welcome
           setView('welcome');
         }
       } catch (error) {
@@ -77,6 +81,8 @@ function App() {
       hasSeenWelcome: true,
     });
 
+    console.log('User profile saved:', profile); // Debug
+
     setUserProfile(profile);
     setView('main');
   };
@@ -93,13 +99,10 @@ function App() {
       hasSeenWelcome: true,
     });
 
+    console.log('User profile saved (skipped):', profile); // Debug
+
     setUserProfile(profile);
     setView('main');
-  };
-
-  const handleOpenTabSelector = () => {
-    setView('tab-selector');
-    // You'll implement TabSelector component next
   };
 
   // Show loading state
@@ -120,7 +123,7 @@ function App() {
     );
   }
 
-  // Render screens
+  // Render screens based on view
   if (view === 'welcome') {
     return (
       <WelcomeScreen
@@ -148,46 +151,12 @@ function App() {
     return (
       <MainScreen
         onInfoClick={handleInfoClick}
-        onAddNew={handleOpenTabSelector}
         userNickname={userProfile?.nickname || 'there'}
       />
     );
   }
 
-  if (view === 'tab-selector') {
-    // Placeholder for now
-    return (
-      <div
-        style={{
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: 'Inter, sans-serif',
-          gap: '16px',
-        }}
-      >
-        <p style={{ fontSize: '16px', color: '#18181b' }}>Tab Selector (Coming next)</p>
-        <button
-          onClick={() => setView('main')}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#18181b',
-            color: '#efeded',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '14px',
-          }}
-        >
-          Back to Main
-        </button>
-      </div>
-    );
-  }
-
+  // Fallback (should never reach here)
   return null;
 }
 

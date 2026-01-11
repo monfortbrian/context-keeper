@@ -11,7 +11,3 @@ export interface Context {
   tabs: Tab[];
   isTrashed?: boolean;
 }
-
-export interface AppState {
-  hasSeenWelcome: boolean;
-}
