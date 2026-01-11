@@ -9,6 +9,7 @@ export interface Context {
   name: string;
   timestamp: number;
   tabs: Tab[];
+  isTrashed?: boolean;
 }
 
 export interface AppState {
