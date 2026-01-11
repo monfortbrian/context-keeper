@@ -1,6 +1,7 @@
 export interface Tab {
   url: string;
   title: string;
+  favIconUrl?: string;
 }
 
 export interface Context {
@@ -8,4 +9,8 @@ export interface Context {
   name: string;
   timestamp: number;
   tabs: Tab[];
+}
+
+export interface AppState {
+  hasSeenWelcome: boolean;
 }

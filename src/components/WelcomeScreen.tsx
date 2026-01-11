@@ -1,0 +1,199 @@
+import { Info } from 'lucide-react';
+
+interface WelcomeScreenProps {
+  onGetStarted: () => void;
+  onInfoClick: () => void;
+}
+
+export function WelcomeScreen({
+  onGetStarted,
+  onInfoClick,
+}: WelcomeScreenProps) {
+  return (
+    <div className="h-dvh flex flex-col relative">
+      {/* Info Icon - Sticky with blur background */}
+      <div className="sticky top-4 right-4 z-10 flex justify-end px-4">
+        <button
+          onClick={onInfoClick}
+          className="p-2 border-0 cursor-pointer"
+          style={{
+            background: 'rgba(239, 237, 237, 0.8)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            borderRadius: '8px',
+          }}
+        >
+          <Info size={24} color="#18181b" strokeWidth={1.5} />
+        </button>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col items-center justify-center px-8">
+        {/* Illustration */}
+        <div className="mb-3">
+          <svg
+            width="140"
+            height="150"
+            viewBox="0 0 210 222"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clipPath="url(#clip0_44_123)">
+              <path
+                d="M79.6513 221.761L79.6198 220.96L74.8286 100.808L80.1811 96.9529L80.4695 96.976L192.3 106.004L204.742 111.712L204.764 112.191L209.575 214.304L79.6513 221.761ZM76.4356 101.591L81.1615 220.097L207.928 212.821L203.213 112.744L191.896 107.552L80.6317 98.5699L76.4356 101.591Z"
+                fill="#18181B"
+              />
+              <path
+                d="M133.949 142.31V176.104C133.949 176.798 133.855 177.475 133.674 178.113H92.6586C88.9342 178.113 85.9185 175.096 85.9185 171.37V141.829C85.9185 137.993 89.1153 134.928 92.95 135.086L131.493 136.748C133.004 138.119 133.949 140.104 133.949 142.31Z"
+                fill="#18181B"
+              />
+              <path
+                d="M168.669 149.791H140.034V151.366H168.669V149.791Z"
+                fill="#18181B"
+              />
+              <path
+                d="M191.035 158.557H140.034V160.133H191.035V158.557Z"
+                fill="#18181B"
+              />
+              <path
+                d="M45.0852 49.802L4.09614 45.7008L0 3.90417L40.1702 8.82537L45.0852 49.802ZM5.53713 44.2622L43.2874 48.0387L38.7538 10.2393L1.75933 5.70741L5.53713 44.2622Z"
+                fill="#18181B"
+              />
+              <path
+                d="M11.1968 15.8384L11.0347 17.4061L33.8692 19.7694L34.0313 18.2016L11.1968 15.8384Z"
+                fill="#18181B"
+              />
+              <path
+                d="M11.1892 22.2581L11.0424 23.8274L33.8768 25.966L34.0236 24.3967L11.1892 22.2581Z"
+                fill="#18181B"
+              />
+              <path
+                d="M11.1786 27.7362L11.053 29.3071L33.8875 31.1334L34.013 29.5625L11.1786 27.7362Z"
+                fill="#18181B"
+              />
+              <path
+                d="M202.564 71.8592L161.575 67.7581L157.479 25.9614L197.649 30.8826L202.564 71.8592ZM163.016 66.3195L200.766 70.096L196.233 32.2966L159.238 27.7647L163.016 66.3195Z"
+                fill="#18181B"
+              />
+              <path
+                d="M168.676 37.8956L168.514 39.4634L191.348 41.8267L191.51 40.2589L168.676 37.8956Z"
+                fill="#18181B"
+              />
+              <path
+                d="M168.668 44.3153L168.521 45.8846L191.356 48.0233L191.502 46.454L168.668 44.3153Z"
+                fill="#18181B"
+              />
+              <path
+                d="M168.657 49.7934L168.532 51.3644L191.366 53.1907L191.492 51.6197L168.657 49.7934Z"
+                fill="#18181B"
+              />
+              <path
+                d="M123.699 55.3255L78.1873 49.6158V0L124.512 7.28524L123.699 55.3255ZM79.7621 48.2249L122.153 53.5438L122.914 8.62843L79.7621 1.84323V48.2249Z"
+                fill="#18181B"
+              />
+              <path
+                d="M89.9499 16.6276L89.7604 18.1923L115.744 21.3433L115.934 19.7786L89.9499 16.6276Z"
+                fill="#18181B"
+              />
+              <path
+                d="M90.7236 25.2914L90.5615 26.8591L113.396 29.2224L113.558 27.6546L90.7236 25.2914Z"
+                fill="#18181B"
+              />
+              <path
+                d="M205.996 113.941L74.0712 104.068V95.5274C74.0712 93.3134 75.0124 91.1916 76.6525 89.7061C78.2934 88.2206 80.4987 87.4944 82.6994 87.7152L198.928 99.3393C202.958 99.7416 205.996 103.1 205.996 107.151L205.996 113.941Z"
+                fill="#18181B"
+              />
+              <path
+                d="M86.3121 99.3373C87.8342 99.3373 89.068 98.1029 89.068 96.5802C89.068 95.0574 87.8342 93.823 86.3121 93.823C84.7901 93.823 83.5563 95.0574 83.5563 96.5802C83.5563 98.1029 84.7901 99.3373 86.3121 99.3373Z"
+                fill="#EFEDED"
+              />
+              <path
+                d="M95.7609 100.913C97.2829 100.913 98.5167 99.6783 98.5167 98.1556C98.5167 96.6329 97.2829 95.3984 95.7609 95.3984C94.2388 95.3984 93.005 96.6329 93.005 98.1556C93.005 99.6783 94.2388 100.913 95.7609 100.913Z"
+                fill="#EFEDED"
+              />
+              <path
+                d="M104.422 101.701C105.944 101.701 107.178 100.466 107.178 98.9434C107.178 97.4207 105.944 96.1863 104.422 96.1863C102.9 96.1863 101.666 97.4207 101.666 98.9434C101.666 100.466 102.9 101.701 104.422 101.701Z"
+                fill="#EFEDED"
+              />
+              <path
+                d="M174.697 172.564C174.673 172.477 174.767 172.405 174.845 172.452L193.948 183.886C194.033 183.937 194 184.067 193.901 184.072L183.982 184.507C183.941 184.509 183.904 184.537 183.892 184.577L180.836 194.023C180.806 194.117 180.671 194.114 180.645 194.019L174.697 172.564Z"
+                fill="#18181B"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_44_123">
+                <rect width="210" height="222" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </div>
+
+        {/* Title */}
+        <h1
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '22px',
+            fontWeight: '500',
+            color: '#18181b',
+            textAlign: 'center',
+            marginBottom: '10px',
+          }}
+        >
+          Welcome to Context Keeper
+        </h1>
+
+        {/* Description */}
+        <p
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '15px',
+            fontWeight: '400',
+            color: '#5a5a5c',
+            lineHeight: '1.5',
+            textAlign: 'center',
+            maxWidth: '320px',
+            marginBottom: '20px',
+          }}
+        >
+          Save your tab chaos as workspaces
+          <br />
+          Restore any project in one click
+        </p>
+
+        {/* Button */}
+        <button
+          onClick={onGetStarted}
+          className="transition-opacity hover:opacity-90"
+          style={{
+            backgroundColor: '#18181b',
+            color: '#efeded',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '15px',
+            fontWeight: '400',
+            height: '48px',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            width: 'calc(100% - 40px)',
+            maxWidth: '360px',
+          }}
+        >
+          Let's Go!
+        </button>
+      </div>
+
+      {/* Footer */}
+      <div className="py-4 text-center">
+        <span
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '11px',
+            color: '#5a5a5c',
+          }}
+        >
+          v1.0.0
+        </span>
+      </div>
+    </div>
+  );
+}
