@@ -97,10 +97,11 @@ export function AboutScreen({ onBack }: AboutScreenProps) {
             }}
           >
             If you have feedback or need support, we'd love to hear from you at{' '}
-            <span style={{ textDecoration: 'underline' }}>
-              support@contextkeeper.com
+            <span style={{ fontWeight: '600' }}>
+              <a href="mailto:monfortnkurunziza0@gmail.com">
+                monfortnkurunziza0@gmail.com
+              </a>
             </span>
-            .
           </p>
         </div>
       </div>
