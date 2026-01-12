@@ -137,7 +137,6 @@ function App() {
     return (
       <UserInfoScreen
         onComplete={handleUserInfoComplete}
-        onSkip={handleUserInfoSkip}
         onInfoClick={handleInfoClick}
       />
     );

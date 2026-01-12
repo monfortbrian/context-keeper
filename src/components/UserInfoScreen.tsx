@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Info } from 'lucide-react';
+import { analytics } from '../lib/analytics';
 
 interface UserInfoScreenProps {
   onComplete: (data: {
@@ -7,7 +8,7 @@ interface UserInfoScreenProps {
     email?: string;
     job?: string;
   }) => void;
-  onSkip: () => void;
+
   onInfoClick: () => void;
 }
 
@@ -34,21 +35,108 @@ export function UserInfoScreen({
     outline: 'none',
   };
 
-  const handleSubmit = () => {
+  // Email validation
+  const isValidEmail = (email: string): boolean => {
+    if (!email) return true; // Email is optional
+
+    // Basic email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return false;
+
+    // List of valid TLDs (top-level domains)
+    const validTLDs = [
+      // Common
+      'com',
+      'org',
+      'net',
+      'edu',
+      'gov',
+      'mil',
+      'int',
+      // Email providers
+      'gmail',
+      'outlook',
+      'yahoo',
+      'hotmail',
+      'icloud',
+      'protonmail',
+      // Country codes (popular)
+      'us',
+      'uk',
+      'ca',
+      'au',
+      'de',
+      'fr',
+      'jp',
+      'cn',
+      'in',
+      'br',
+      'co',
+      'io',
+      'ai',
+      'me',
+      'app',
+      'dev',
+      'tech',
+      'design',
+      // Business
+      'biz',
+      'info',
+      'name',
+      'pro',
+    ];
+
+    // Extract TLD
+    const tld = email.split('.').pop()?.toLowerCase();
+    if (!tld) return false;
+
+    // Check if TLD is valid
+    return validTLDs.includes(tld);
+  };
+
+  const handleSubmit = async () => {
+    // Validate name
     if (!nickname.trim()) {
       alert('Please enter your name');
       return;
     }
 
-    onComplete({
+    // Validate email if provided
+    if (email.trim() && !isValidEmail(email.trim())) {
+      alert(
+        'Please enter a valid email address (e.g., john@gmail.com, sarah@company.com)'
+      );
+      return;
+    }
+
+    const userData = {
       nickname: nickname.trim(),
       email: email.trim() || undefined,
       job: job || undefined,
-    });
+    };
+
+    // Track analytics
+    try {
+      analytics.identify(Date.now().toString(), {
+        name: userData.nickname,
+        email: userData.email,
+        job: userData.job,
+      });
+
+      analytics.track('User Onboarded', {
+        has_email: !!userData.email,
+        has_job: !!userData.job,
+      });
+    } catch (error) {
+      console.error('Analytics error:', error);
+    }
+
+    // Complete onboarding
+    onComplete(userData);
   };
 
   return (
-    <div className="h-dvh w-full overflow-x-hidden flex flex-col relative">
+    <div className="h-screen w-full overflow-x-hidden flex flex-col relative">
       {/* Info Icon */}
       <div className="sticky top-4 right-4 z-10 flex justify-end px-4">
         <button
@@ -65,17 +153,22 @@ export function UserInfoScreen({
         </button>
       </div>
 
+      {/* Skip Button */}
+
       {/* Main Content */}
       <div className="flex-1 flex flex-col justify-center px-4">
         <div className="w-full mx-auto" style={{ maxWidth: '360px' }}>
           {/* Name */}
           <div style={{ marginBottom: '20px' }}>
             <label
+              htmlFor="nickname"
               style={{
                 fontSize: '14px',
                 fontWeight: 500,
                 marginBottom: '8px',
                 display: 'block',
+                fontFamily: 'Inter, sans-serif',
+                color: '#18181b',
               }}
             >
               What should we call you?
@@ -93,14 +186,20 @@ export function UserInfoScreen({
           {/* Email */}
           <div style={{ marginBottom: '20px' }}>
             <label
+              htmlFor="email"
               style={{
                 fontSize: '14px',
                 fontWeight: 500,
                 marginBottom: '8px',
                 display: 'block',
+                fontFamily: 'Inter, sans-serif',
+                color: '#18181b',
               }}
             >
-              Get updates?
+              Get updates?{' '}
+              <span style={{ color: '#5a5a5c', fontWeight: 400 }}>
+                (optional)
+              </span>
             </label>
             <input
               id="email"
@@ -115,14 +214,20 @@ export function UserInfoScreen({
           {/* Job */}
           <div style={{ marginBottom: '32px' }}>
             <label
+              htmlFor="job"
               style={{
                 fontSize: '14px',
                 fontWeight: 500,
                 marginBottom: '8px',
                 display: 'block',
+                fontFamily: 'Inter, sans-serif',
+                color: '#18181b',
               }}
             >
-              You are a...
+              You are a...{' '}
+              <span style={{ color: '#5a5a5c', fontWeight: 400 }}>
+                (optional)
+              </span>
             </label>
             <select
               id="job"
@@ -138,13 +243,17 @@ export function UserInfoScreen({
                 backgroundPosition: 'right 12px center',
               }}
             >
-              <option value="">Select</option>
-              <option value="product-designer">Product Designer</option>
-              <option value="developer">Developer</option>
-              <option value="project-manager">Project Manager</option>
-              <option value="student">Student</option>
+              <option value="" disabled>
+                Select your role
+              </option>
+              <option value="designer">Product Designer</option>
+              <option value="data-analyst">Data Analyst</option>
+              <option value="developer">Software Engineer</option>
+              <option value="product-manager">Project Manager</option>
+              <option value="content-creator">Content Creator</option>
               <option value="researcher">Researcher</option>
               <option value="entrepreneur">Entrepreneur</option>
+              <option value="student">Student</option>
               <option value="other">Other</option>
             </select>
           </div>
@@ -160,16 +269,27 @@ export function UserInfoScreen({
               borderRadius: '10px',
               border: 'none',
               cursor: 'pointer',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '15px',
+              fontWeight: '400',
             }}
           >
-            {nickname.trim() ? `Alright ${nickname.trim()}` : 'Alright ....'}
+            {nickname.trim() ? `Alright ${nickname.trim()}` : 'Alright....'}
           </button>
         </div>
       </div>
 
       {/* Footer */}
       <div className="py-4 text-center">
-        <span style={{ fontSize: '11px', color: '#5a5a5c' }}>v1.0.0</span>
+        <span
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '11px',
+            color: '#5a5a5c',
+          }}
+        >
+          v1.0.0
+        </span>
       </div>
     </div>
   );
