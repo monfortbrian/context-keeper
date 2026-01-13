@@ -1,12 +1,14 @@
 import mixpanel from 'mixpanel-browser';
 
 const MIXPANEL_TOKEN = import.meta.env.VITE_MIXPANEL_TOKEN;
+const IS_DEV = import.meta.env.DEV;
 
 if (MIXPANEL_TOKEN) {
   mixpanel.init(MIXPANEL_TOKEN, {
     debug: true,
     track_pageview: true,
     persistence: 'localStorage',
+    ignore_dnt: IS_DEV,
   });
 }
 
