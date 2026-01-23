@@ -26,7 +26,8 @@ export default defineConfig({
       },
     },
     // Use esbuild minifier (doesn't create obfuscated code)
-    minify: 'esbuild',
+    minify: false,
     sourcemap: true,
+    cssMinify: false,
   },
 });
